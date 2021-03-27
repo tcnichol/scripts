@@ -38,8 +38,8 @@ def main():
     # path to folder which needs to be zipped
 
         # writing files to a zipfile
-    file_paths  = ['test.txt',  'test2.txt']
-    with ZipFile('test.zip', 'w') as zip:
+    file_paths  = ['test_image.dbf',  'test_image.prj','test_image.shp','test_image.shx']
+    with ZipFile('test_image.zip', 'w') as zip:
         # writing each file one by one
         for file in file_paths:
             zip.write(file)
