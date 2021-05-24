@@ -14,8 +14,6 @@ import time
 clowder_url = 'http://localhost:9000/'
 user_api = 'c9b05b10-085b-46f5-8ddf-c977440900c5'
 
-clowder_url = sys.argv[1]
-user_api = sys.argv[2]
 dataset_id = sys.argv[3]
 folder_id = sys.argv[4]
 file_path = sys.argv[5]
@@ -67,7 +65,8 @@ def upload_a_file_to_dataset_with_folder(filepath, dataset_id, folder_id):
     if os.path.exists(filepath):
             filename = os.path.basename(filepath)
             m = MultipartEncoder(
-                fields={'file': (filename, open(filepath, 'rb'))}
+                fields={'file': (filename, open(filepath, 'rb')),
+                        'folder_id':folder_id}
             )
             try:
                 result = requests.post(url, data=m, headers={'Content-Type': m.content_type},
@@ -89,5 +88,7 @@ def upload_a_file_to_dataset_with_folder(filepath, dataset_id, folder_id):
 
 if __name__ == '__main__':
     upload_a_file_to_dataset_with_folder(file_path, dataset_id,folder_id)
+    upload_a_file_to_dataset(file_path, dataset_id)
+    upload_a_file_to_dataset_with_folder(file_path, dataset_id, 'ddd')
     upload_a_file_to_dataset(file_path, dataset_id)
     print('done')
