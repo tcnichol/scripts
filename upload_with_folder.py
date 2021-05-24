@@ -90,5 +90,4 @@ def upload_a_file_to_dataset_with_folder(filepath, dataset_id, folder_id):
 if __name__ == '__main__':
     upload_a_file_to_dataset_with_folder(file_path, dataset_id,folder_id)
     upload_a_file_to_dataset(file_path, dataset_id)
-    upload_a_file_to_dataset(file_path)
     print('done')
