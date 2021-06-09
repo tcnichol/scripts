@@ -87,8 +87,8 @@ def upload_a_file_to_dataset_with_folder(filepath, dataset_id, folder_id):
         print("unable to upload file %s (not found)", filepath)
 
 if __name__ == '__main__':
-    upload_a_file_to_dataset_with_folder(file_path, dataset_id,folder_id)
-    upload_a_file_to_dataset(file_path, dataset_id)
+    #upload_a_file_to_dataset_with_folder(file_path, dataset_id,folder_id)
+    #upload_a_file_to_dataset(file_path, dataset_id)
     upload_a_file_to_dataset_with_folder(file_path, dataset_id, 'ddd')
     upload_a_file_to_dataset(file_path, dataset_id)
     print('done')

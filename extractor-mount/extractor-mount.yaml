@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: extractor-mount
+  namespace: clowder
+  labels:
+    app: maple
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mount
+  template:
+    metadata:
+      labels:
+        app: mount
+    spec:
+      initContainers:
+      - name: check-rabbitmq
+        image: clowder/check:1.10.0
+        imagePullPolicy: Always
+        # volumeMounts:
+        #   - name: maple-mount-data
+        #     mountPath: /home/maple-mount-data
+        command:
+        - ./check_rabbitmq
+        env:
+        - name: RABBITMQ_URI
+          valueFrom:
+            secretKeyRef:
+              key: rabbitmq-uri
+              name: clowder
+      containers:
+      - name: extractor
+        image: tcnichol/mount-test
+        resources:
+          limits:
+            memory: 3Gi
+          requests:
+            memory: 2Gi
+        volumeMounts:
+        - mountPath: /home/data/upload_files
+          name: mount-data
+        env:
+        - name: RABBITMQ_URI
+          valueFrom:
+            secretKeyRef:
+              key: rabbitmq-uri
+              name: clowder
+      volumes:
+      - name: mount-data
+        hostPath:
+          path: /home/mount-extractor/upload_files

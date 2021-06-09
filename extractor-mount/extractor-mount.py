@@ -4,9 +4,18 @@
 
 import logging
 import subprocess
+import os
+import shutil
 
 from pyclowder.extractors import Extractor
 import pyclowder.files
+
+def delete_folder_contents(path_to_folder):
+    files = os.listdir(path_to_folder)
+    for file in files:
+        path_to_file = os.path.join(path_to_folder, file)
+        os.remove(path_to_file)
+
 
 
 class ExtractorMount(Extractor):
@@ -34,20 +43,31 @@ class ExtractorMount(Extractor):
         filename = resource['name']
 
         path_to_files = '/home/data/upload_files/'
+        print('does path to destination exist?')
+        print(os.path.isdir(path_to_files))
 
-        destination = os.path.join(path_to_files,filename)
+        destination = os.path.join(path_to_files, filename)
+        print('destination is', destination)
 
         shutil.copy(inputfile, destination)
 
         all_files = os.listdir(path_to_files)
 
-        num_files = 1
-
         num_files = len(all_files)
+
+        print("do we have 3 or more files?")
+        if num_files > 2:
+            try:
+                delete_folder_contents(path_to_files)
+            except Exception as e:
+                print("could not delete")
+                logger.info(str(e))
+
+
 
         # These process messages will appear in the Clowder UI under Extractions.
         connector.message_process(resource, "Copied to mounted directory...")
-        logger.info("current files", str(all_files))
+        logger.info("current files : " + str(all_files))
 
 
         # Store results as metadata
