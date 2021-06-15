@@ -2,6 +2,7 @@ import paramiko
 from paramiko import SSHClient
 from scp import SCPClient
 import sys
+import time
 hostname = sys.argv[1]
 password = sys.argv[2]
 username = sys.argv[3]
@@ -27,6 +28,9 @@ def execute_commands(client, commands: [str]):
             print(f"INPUT: {cmd} | OUTPUT: {line}")
     return responses
 
+
+
+
 # Define progress callback that prints the current percentage completed for the file
 def progress(filename, size, sent):
     sys.stdout.write("%s's progress: %.2f%%   \r" % (filename, float(sent)/float(size)*100) )
@@ -40,7 +44,43 @@ def upload_to_remote(client: SSHClient, path_to_file, destination):
 
     scp = SCPClient(client.get_transport(),progress=progress)
     scp.put(path_to_file, recursive=True,remote_path=destination)
-    scp.close()
+
+    try:
+        stdin, stdout, stderr = ssh_client.exec_command('nohup python test.py > testupload.log &')
+        scp.close()
+    except Exception as e:
+        print(e)
+
+def copy_python_script_and_run(client: SSHClient, path_to_script, destination):
+    ssh_client = paramiko.SSHClient()
+    ssh_client.load_system_host_keys()
+
+    ssh_client.connect(hostname, username=username, password=password)
+
+    scp = SCPClient(ssh_client.get_transport(), progress=progress)
+    scp.put(path_to_script, recursive=True, remote_path=destination)
+
+    try:
+        stdin, stdout, stderr = ssh_client.exec_command('python test.py', get_pty=True)
+        time.sleep(50)
+        scp.close()
+    except Exception as e:
+        print(e)
+
+def run_python_script():
+    print(sys.argv)
+    ssh_client = paramiko.SSHClient()
+    ssh_client.load_system_host_keys()
+
+    ssh_client.connect(hostname, username=username, password=password)
+
+    stdin, stdout, stderr = ssh_client.exec_command('cd ocean \n python /jet/home/pdg/ocean/make_text_file.py')
+    print(stdout.read().decode("utf8"))
+    ssh_client.close()
+    print('done')
+
+
+
 
 def main():
     print(sys.argv)
@@ -61,7 +101,9 @@ if __name__ == '__main__':
     ssh_client = paramiko.SSHClient()
     ssh_client.load_system_host_keys()
 
+    # copy_python_script_and_run(client=ssh_client, path_to_script='/Users/helium/ncsa/scripts/python-ssh/test.py', destination='/jet/home/pdg/ocean')
+
     ssh_client.connect(hostname, username=username,password=password)
 
-    upload_to_remote(client=ssh_client, path_to_file='/Users/helium/ncsa/scripts/python-ssh/test.txt', destination='/jet/home/pdg/ocean')
-    main()
+    # upload_to_remote(client=ssh_client, path_to_file='/Users/helium/ncsa/scripts/python-ssh/make_text_file.py', destination='/jet/home/pdg/ocean')
+    run_python_script()
