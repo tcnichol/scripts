@@ -46,8 +46,20 @@ def upload_to_remote(client: SSHClient, path_to_file, destination):
     scp.put(path_to_file, recursive=True,remote_path=destination)
 
     try:
-        stdin, stdout, stderr = ssh_client.exec_command('nohup python test.py > testupload.log &')
+        stdin, stdout, stderr = ssh_client.exec_command('cd ocean \n nohup python test.py > testupload.log &')
         scp.close()
+    except Exception as e:
+        print(e)
+
+def run_nohup():
+    ssh_client = paramiko.SSHClient()
+    ssh_client.load_system_host_keys()
+
+    ssh_client.connect(hostname, username=username, password=password)
+
+    try:
+        stdin, stdout, stderr = ssh_client.exec_command('cd ocean \n nohup python test.py > testupload.log &')
+        ssh_client.close()
     except Exception as e:
         print(e)
 
@@ -104,6 +116,7 @@ if __name__ == '__main__':
     # copy_python_script_and_run(client=ssh_client, path_to_script='/Users/helium/ncsa/scripts/python-ssh/test.py', destination='/jet/home/pdg/ocean')
 
     ssh_client.connect(hostname, username=username,password=password)
+    run_nohup()
 
     # upload_to_remote(client=ssh_client, path_to_file='/Users/helium/ncsa/scripts/python-ssh/make_text_file.py', destination='/jet/home/pdg/ocean')
     run_python_script()
