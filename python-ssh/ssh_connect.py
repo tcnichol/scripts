@@ -38,7 +38,7 @@ def upload_to_remote(client: SSHClient, path_to_file, destination):
 
     ssh_client.connect(hostname, username=username,password=password)
 
-    scp = SCPClient(client.get_transport())
+    scp = SCPClient(client.get_transport(),progress=progress)
     scp.put(path_to_file, recursive=True,remote_path=destination)
     scp.close()
 
