@@ -9,6 +9,8 @@ username = sys.argv[3]
 
 ## https://stackoverflow.com/questions/6203653/how-do-you-execute-multiple-commands-in-a-single-session-in-paramiko-python
 
+## https://stackoverflow.com/questions/17560498/running-process-of-remote-ssh-server-in-the-background-using-python-paramiko
+
 
 def execute_commands(client, commands: [str]):
     """
@@ -44,12 +46,7 @@ def upload_to_remote(client: SSHClient, path_to_file, destination):
 
     scp = SCPClient(client.get_transport(),progress=progress)
     scp.put(path_to_file, recursive=True,remote_path=destination)
-
-    try:
-        stdin, stdout, stderr = ssh_client.exec_command('cd ocean \n nohup python test.py > testupload.log &')
-        scp.close()
-    except Exception as e:
-        print(e)
+    scp.close()
 
 def run_nohup():
     ssh_client = paramiko.SSHClient()
@@ -57,11 +54,21 @@ def run_nohup():
 
     ssh_client.connect(hostname, username=username, password=password)
 
+    channel = ssh_client.get_transport().open_session()
+    pty = channel.get_pty()
+    shell = ssh_client.invoke_shell()
     try:
-        stdin, stdout, stderr = ssh_client.exec_command('cd ocean \n nohup python test.py > testupload.log &')
-        ssh_client.close()
+        shell.send("cd ocean \n nohup python test.py > test0.log &\n")
     except Exception as e:
         print(e)
+
+    print('after')
+
+    # try:
+    #     stdin, stdout, stderr = channel.exec_command('cd ocean \n nohup python test.py > testupload.log &')
+    #     ssh_client.close()
+    # except Exception as e:
+    #     print(e)
 
 def copy_python_script_and_run(client: SSHClient, path_to_script, destination):
     ssh_client = paramiko.SSHClient()
@@ -91,8 +98,21 @@ def run_python_script():
     ssh_client.close()
     print('done')
 
+def nohup1():
+    client = paramiko.SSHClient()
+    client.connect(hostname, username=username, password=password, timeout=5)
+    transport = client.get_transport()
+    channel = transport.open_session()
+    channel.exec_command('cd ocean \n python test.py > testlog1.log &')
 
-
+def nohup2():
+    ssh = paramiko.SSHClient()
+    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+    ssh.connect(hostname=hostname, username=username, password =password)
+    channel = ssh.get_transport().open_session()
+    pty = channel.get_pty()
+    shell = ssh.invoke_shell()
+    shell.send("cd /ocean \n nohup python test.py > testlog2.log &")
 
 def main():
     print(sys.argv)
@@ -116,7 +136,20 @@ if __name__ == '__main__':
     # copy_python_script_and_run(client=ssh_client, path_to_script='/Users/helium/ncsa/scripts/python-ssh/test.py', destination='/jet/home/pdg/ocean')
 
     ssh_client.connect(hostname, username=username,password=password)
+
     run_nohup()
 
-    # upload_to_remote(client=ssh_client, path_to_file='/Users/helium/ncsa/scripts/python-ssh/make_text_file.py', destination='/jet/home/pdg/ocean')
-    run_python_script()
+    try:
+        nohup1()
+    except Exception as e:
+        print(e)
+
+    try:
+        nohup2()
+    except Exception as e:
+        print(e)
+
+    print('done')
+    # upload_to_remote(client=ssh_client, path_to_file='/Users/helium/ncsa/scripts/python-ssh/test.py', destination='/jet/home/pdg/ocean')
+    run_nohup()
+    # run_python_script()
