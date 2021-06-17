@@ -1,0 +1,16 @@
+name: radiant
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python==3.6.12
+  - tensorflow=1.14.0
+  - keras
+  - gdal
+  - h5py
+  - nomkl
+  - pyshp
+  - Shapely
+  - scipy
+  - scikit-learn
+  - scikit-image==0.16.2
