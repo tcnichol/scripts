@@ -16,4 +16,6 @@ RUN pip3 install GDAL==2.4.2
 # Install libspatialindex for Rtree, a ctypes Python wrapper of libspatialindex
 RUN apt-get install -y libspatialindex-dev
 
+COPY main.py /home/main.py
+
 CMD ["python3","-u", "/home/main.py"]
