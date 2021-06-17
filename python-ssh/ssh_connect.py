@@ -100,7 +100,7 @@ def nohup1():
     client.connect(hostname, username=username, password=password, timeout=5)
     transport = client.get_transport()
     channel = transport.open_session()
-    channel.exec_command('cd ocean \n python test.py > testlog1.log &')
+    channel.exec_command('cd ocean \n python test3.py > test3.log &\n')
 
 def nohup2():
     ssh = paramiko.SSHClient()
@@ -134,29 +134,8 @@ if __name__ == '__main__':
 
     ssh_client.connect(hostname, username=username,password=password)
 
-    upload_to_remote(client=ssh_client, path_to_file='/Users/helium/ncsa/scripts/python-ssh/test1.py', destination='/jet/home/pdg/ocean')
-    upload_to_remote(client=ssh_client, path_to_file='/Users/helium/ncsa/scripts/python-ssh/test2.py', destination='/jet/home/pdg/ocean')
-    upload_to_remote(client=ssh_client, path_to_file='/Users/helium/ncsa/scripts/python-ssh/test3.py', destination='/jet/home/pdg/ocean')
 
     try:
-        run_nohup()
+        nohup1()
     except Exception as e:
         print(e)
-
-
-    # run_nohup()
-    #
-    # try:
-    #     nohup1()
-    # except Exception as e:
-    #     print(e)
-    #
-    # try:
-    #     nohup2()
-    # except Exception as e:
-    #     print(e)
-    #
-    # print('done')
-    # # upload_to_remote(client=ssh_client, path_to_file='/Users/helium/ncsa/scripts/python-ssh/test.py', destination='/jet/home/pdg/ocean')
-    # run_nohup()
-    # # run_python_script()
