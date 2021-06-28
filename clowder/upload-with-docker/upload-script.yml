@@ -1,4 +1,4 @@
-version: '1.0'
+version: '3.5'
 
 # docker-compose -f docker-compose.yml -f upload-script.yml up -d
 
@@ -9,11 +9,9 @@ services:
 
   # extract checksum
   uploadtestrun:
-    image: tcnichol/upload-test:latest
+    image: tcnichol/testing-upload:latest
     restart: unless-stopped
     networks:
-      - clowder
-    depends_on:
-      - clowder
+      - clowder_clowder
 networks:
-  clowder:
+  clowder_clowder:
