@@ -14,7 +14,12 @@ def main():
         name = entry['name']
         if name == 'test 1':
             matching_datasets.append(entry)
+
+    # this does not currently work
+    search_for_space_results = client.get('/search', params={'query':'PDG', 'resource_type':'space'})
     print('got matching datasets', len(matching_datasets))
+    all_spaces = client.get('/spaces')
+    print('got all spaces')
 
 if __name__ == '__main__':
     main()
