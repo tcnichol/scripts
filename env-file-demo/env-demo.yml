@@ -1,0 +1,16 @@
+version: '3.5'
+
+# docker-compose -f docker-compose.yml -f upload-script.yml up -d
+
+services:
+  # ----------------------------------------------------------------------
+  # EXTRACTORS
+  # ----------------------------------------------------------------------
+
+  # extract checksum
+  uploadtestrun:
+    image: tcnichol/envdemo:latest
+    restart: unless-stopped
+    environment:
+      PASSWORD: "${SECRET}"
+      USER: "${NAME}"

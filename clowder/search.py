@@ -22,4 +22,8 @@ def main():
     print('got all spaces')
 
 if __name__ == '__main__':
+    try:
+        local()
+    except:
+        pass
     main()
