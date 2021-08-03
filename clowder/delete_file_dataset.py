@@ -7,7 +7,7 @@ from pyclowder.extractors import Extractor
 
 url = sys.argv[1]
 api_key = sys.argv[2]
-file_id = '61097c7b5e0e0d2b3985e763'
+file_id = sys.argv[3]
 
 client = pyclowder.datasets.ClowderClient(host=url, key=api_key)
 

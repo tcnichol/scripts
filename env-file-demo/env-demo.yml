@@ -12,5 +12,5 @@ services:
     image: tcnichol/envdemo:latest
     restart: unless-stopped
     environment:
-      PASSWORD: "${SECRET}"
-      USER: "${NAME}"
+      PASSWORD: "${PASSWORD}"
+      USER: "${ADMIN_USER}"
