@@ -46,23 +46,27 @@ def get_entries_within_timestamp(start_time, end_time, path_to_json):
                 results.append(each)
     return results
 
-time_stamps = get_timespan_json_file('61775e9cb84813122064b444.json')
-
-# 2021-11-03T15:45:44.419000
-
-# create a datetime for the day at 3:15 AM
-start_time_query = datetime.datetime(2021, 11, 3, 15, 45, 50)
-
-# create a datetime for 30 seconds  later
-end_time_query = datetime.datetime(2021, 11, 3, 15, 46)
 
 total_file = get_entire_json_file('61775e9cb84813122064b444.json')
 
+time_stamps = get_timespan_json_file('61775e9cb84813122064b444.json')
+
+
+# create a datetime for the start of query
+start_time_query = datetime.datetime(2021, 11, 3, 15, 45, 50)
+
+# create a datetime for the end of query
+end_time_query = datetime.datetime(2021, 11, 3, 15, 46)
+
+
+## THIS gets the entries that are within the start and end time
 entries = get_entries_within_timestamp(start_time_query, end_time_query, '61775e9cb84813122064b444.json')
 
 earlier_date = datetime.datetime(2021, 11, 3, 0, 0, 0)
 
 later_date = datetime.datetime(2021, 11, 3, 20, 0, 0)
+
+# this check if the start or end times are BEFORE this particular json
 
 is_earlier = is_start_before_json('61775e9cb84813122064b444.json', earlier_date)
 
